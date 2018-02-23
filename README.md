@@ -1,6 +1,7 @@
 Title:  Readme de protobuf
 
-Author: Borys Makogonyuk Vasylev boris.makogonyuk@gmail.com
+Author: Hugo Medina Sotomayor hugo.medinas@outlook.com and
+        Borys Makogonyuk Vasylev boris.makogonyuk@gmail.com
 
 Date:   24/05/2017
 
