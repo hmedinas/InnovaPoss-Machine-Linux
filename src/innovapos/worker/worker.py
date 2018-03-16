@@ -110,7 +110,7 @@ class HardwareWorkerSettings:
         config.rabbitmq_incoming_queue_name = f'{parser.get("rabbitmq_incoming", "queue_name")}{config.machine_id}'
         config.rabbitmq_outgoing_connection_string = parser.get("rabbitmq_outgoing", "connection_string")
         config.rabbitmq_outgoing_queue_name = f'{parser.get("rabbitmq_outgoing", "queue_name")}{config.machine_id}'
-
+        #gateway
         config.rabbitmq_app_gate_connection_string = parser.get("rabbitmq_local", "connection_string")
         config.rabbitmq_app_gate_queue_name = f'{parser.get("rabbitmq_local", "queue_name")}-{config.machine_id}'
 
@@ -560,7 +560,8 @@ class HardwareWorker:
                 self._setup_ws_amqp_client_()
                 #TODO: desactivamos la parte del gateway
                 print('HMS: configurando gateway')
-                self._setup_app_gateway_amqp_client_()
+                # HMS: gateway
+                #self._setup_app_gateway_amqp_client_()
                 self.logger.info(f"Conexion Iniciada con Exito. Inicio de Loop de eventos.")
                 self.current_state = WorkerStates.IDLE
 
@@ -577,7 +578,8 @@ class HardwareWorker:
 
                 while True:
                     self.ws_client.process_data_events()
-                    self.gateway_client.process_data_events()
+                    #HMS: gateway
+                    #self.gateway_client.process_data_events()
                     if self.cur_app_user_client is not None:
                         self.cur_app_user_client.process_data_events()
                     sleep(0.1)
