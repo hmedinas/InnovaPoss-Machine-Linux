@@ -117,7 +117,7 @@ class HardwareClient:
         self.mon_adapter.bind_and_setup_listening()
         time.sleep(1)
         #TODO: solo para linux
-        self.startProcessSeg()
+        #self.startProcessSeg()
         time.sleep(1)
         self.logger.debug("Opening connection to CCM")
         self.ccm_adapter.open()
@@ -340,7 +340,7 @@ class BlockingAMQPClient:
         
 class QueueDestroid:
     def __init__(self):
-        self.Credential:str='ampqs://innova_demo:dimatica@innova.boromak.com'
+        self.Credential:str='amqp://MachineDimatica:Machine@innova.vservers.es:5672'
 
 
     def queue_delete(self,_queue:str):
