@@ -117,7 +117,7 @@ class HardwareClient:
         self.mon_adapter.bind_and_setup_listening()
         time.sleep(1)
         #TODO: solo para linux
-        #self.startProcessSeg()
+        self.startProcessSeg()
         time.sleep(1)
         self.logger.debug("Opening connection to CCM")
         self.ccm_adapter.open()
