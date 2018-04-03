@@ -488,7 +488,9 @@ def DispacherProduct(client: BlockingAMQPClient, props: pika.spec.BasicPropertie
                 return
             else:
                 worker.precioProducto = _price
-                _ResultTemp = CCM_Select(_carril, _Result.Accion)
+                # se quita a peticion de pablo
+                #_ResultTemp = CCM_Select(_carril, _Result.Accion)
+                _ResultTemp='OK'
                 if (_ResultTemp.Status == 'KO'):
                     _Result = _ResultTemp
                     worker.current_state = WorkerStates.IDLE
