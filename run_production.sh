@@ -1,3 +1,4 @@
+git pull
 killall python3
 cd  /home/pi/innovapos/
 export PYTHONPATH="$PYTHONPATH:/home/pi/innovapos/src/"
