@@ -47,9 +47,9 @@ def startProcess():
 
 if __name__ == "__main__":
     time.sleep(2)
-
-    os.system("fuser -k 3000/tcp")
-    os.system("fuser -k 3001/tcp")
+    # TODO: Solo linux
+    #os.system("fuser -k 3000/tcp")
+    #os.system("fuser -k 3001/tcp")
     config_path = "configs/innovapos_worker+simulator.config"
     if len(sys.argv) > 1:
         config_path = sys.argv[1]
