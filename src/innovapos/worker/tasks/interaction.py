@@ -1442,7 +1442,7 @@ def CarritoCompras(client:BlockingAMQPClient,props: pika.spec.BasicProperties, m
     try:
         params: dict = json.loads(message)
 
-        lstCarriles=str(params['CARRILES'])
+        lstCarriles=params['CARRILES']
 
         print(f'----> Ejecutando CCM_Getstatus')
         reply = worker.hardware_client.transact_message_to_ccm("CCM_Getstatus")
@@ -1454,7 +1454,7 @@ def CarritoCompras(client:BlockingAMQPClient,props: pika.spec.BasicProperties, m
             print(f'CCM_Visa: {reply}')
             if 'OK' in reply:
                 for list in lstCarriles:
-                    print(f'RPT:{list}')
+                    print(f'CCM_OutStock({list})')
                     Rpt=worker.hardware_client.transact_message_to_ccm("CCM_OutStock("+list+")")
                     print(f'RPT >>>>> {Rpt}')
     except Exception as ex:
