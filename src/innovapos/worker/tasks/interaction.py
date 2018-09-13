@@ -1418,4 +1418,61 @@ def Off_TV(client: BlockingAMQPClient, props: pika.spec.BasicProperties, message
 
 
 #endregion
+#region
+#==============================================================================
+#               CARRITO DE COMPRAS
+#==============================================================================
+@worker.ws_message_handler("CARRITO",[WorkerStates.ANY])
+def CarritoCompras(client:BlockingAMQPClient,props: pika.spec.BasicProperties, message: str)-> None:
+    print(f'=======================')
+    print(f'Carrito:{message}')
+
+    print('=========================')
+    print('    CARRITO        ')
+    _Result = MessageJson()
+    _Result.Accion = "CARRITO"
+    #_Result.TimeBloq = str(TimeBloq())
+    _Promo: bool = False
+    _props = pika.spec.BasicProperties()
+    _props.expiration = '30000'
+    oQueueDestroid = QueueDestroid()
+    print(f'Mensaje Input: {message}')
+    print('=========================')
+
+    try:
+        params: dict = json.loads(message)
+
+        lstCarriles=str(params['CARRILES'])
+
+        print(f'----> Ejecutando CCM_Getstatus')
+        reply = worker.hardware_client.transact_message_to_ccm("CCM_Getstatus")
+        print(f'CCM_Getstatus: {reply}')
+        print(f'-----> Fin CCM_Getstatus')
+        if 'OK' in reply:
+            print('Comando VISA')
+            reply = worker.hardware_client.transact_message_to_ccm("CCM_Visa")
+            print(f'CCM_Visa: {reply}')
+            if 'OK' in reply:
+                for list in lstCarriles:
+                    print(f'RPT:{list}')
+                    Rpt=worker.hardware_client.transact_message_to_ccm("CCM_OutStock("+list+")")
+                    print(f'RPT >>>>> {Rpt}')
+    except Exception as ex:
+        print('Error..... Carrito ')
+        print(ex)
+        _Result.Status = "KO"
+        _Result.Success = 'false'
+        _Result.Mensaje = ErrorProcess.DESCONOCIDO
+        msg = worker.messageJsonOutput(_Result)
+        print(f'Mensaje : {msg}')
+        client.send_message(f'{msg}')
+        print(f'Estado Maquina: {worker.current_state}')
+    finally:
+        worker.precioProducto = 0
+        worker.importeIngresado = 0
+        worker.isFinish = False
+        print(f'Estado Maquina: {worker.current_state}')
+
+
+#endregion
 
