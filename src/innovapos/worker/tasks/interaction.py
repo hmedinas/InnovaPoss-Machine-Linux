@@ -1457,6 +1457,13 @@ def CarritoCompras(client:BlockingAMQPClient,props: pika.spec.BasicProperties, m
                     print(f'CCM_OutStock({list})')
                     Rpt=worker.hardware_client.transact_message_to_ccm("CCM_OutStock("+list+")")
                     print(f'RPT >>>>> {Rpt}')
+
+        _Result.Status = "OK"
+        msg = worker.messageJsonOutput(_Result)
+        print(f'Mensaje : {msg}')
+        # se envia el mensaje al cliente
+        worker.cur_app_user_client.send_message(f'{msg}', props=_props)
+
     except Exception as ex:
         print('Error..... Carrito ')
         print(ex)
