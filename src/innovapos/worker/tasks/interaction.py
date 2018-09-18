@@ -1423,7 +1423,7 @@ def Off_TV(client: BlockingAMQPClient, props: pika.spec.BasicProperties, message
 #               CARRITO DE COMPRAS
 #==============================================================================
 @worker.ws_message_handler("CARRITO",[WorkerStates.ANY])
-@worker.ws_message_handler("CARRITO", [WorkerStates.ANY])
+@worker.app_message_handler("CARRITO", [WorkerStates.ANY])
 def CarritoCompras(client:BlockingAMQPClient,props: pika.spec.BasicProperties, message: str)-> None:
     print(f'=======================')
     print(f'Carrito:{message}')
