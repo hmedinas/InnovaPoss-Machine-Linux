@@ -1462,7 +1462,7 @@ def CarritoCompras(client:BlockingAMQPClient,props: pika.spec.BasicProperties, m
         msg = worker.messageJsonOutput(_Result)
         print(f'Mensaje : {msg}')
         # se envia el mensaje al cliente
-        worker.cur_app_user_client.send_message(f'{msg}', props=_props)
+        client.send_message(f'{msg}')
 
     except Exception as ex:
         print('Error..... Carrito ')
