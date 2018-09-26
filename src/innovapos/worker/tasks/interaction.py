@@ -1440,8 +1440,14 @@ def CarritoCompras(client:BlockingAMQPClient,props: pika.spec.BasicProperties, m
     print(f'Mensaje Input: {message}')
     print('=========================')
 
+
     try:
         params: dict = json.loads(message)
+
+        #_IdUser: str = str(params['User'])
+        #_IdCamp: str = str(params['Camp'])
+        _IdUser='null'
+        _IdCamp='null'
 
         lstCarriles=params['CARRILES']
 
@@ -1459,11 +1465,19 @@ def CarritoCompras(client:BlockingAMQPClient,props: pika.spec.BasicProperties, m
                     Rpt=worker.hardware_client.transact_message_to_ccm("CCM_OutStock("+list+")")
                     print(f'RPT >>>>> {Rpt}')
 
+                    _Result.Mensaje = SussesProcess.CCM_WRITE
+                    # Todo: envio de cambio de Stock al servidor
+                    msgNew = MessageJsonDispacher(list, _User=_IdUser, _Camp=_IdCamp)
+                    print(f'{msgNew}')
+                    oQueueDestroid.newMessageServer(msgNew, props=None, queue_name=NameQueueServer())
+
         _Result.Status = "OK"
         msg = worker.messageJsonOutput(_Result)
         print(f'Mensaje : {msg}')
         # se envia el mensaje al cliente
         client.send_message(f'{msg}')
+
+
 
     except Exception as ex:
         print('Error..... Carrito ')
