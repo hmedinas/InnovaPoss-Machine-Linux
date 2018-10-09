@@ -1421,10 +1421,9 @@ def SetTimeInfo(client: BlockingAMQPClient, props: pika.spec.BasicProperties, me
         print('Time Extra: Info 15 segundos')
         _Result = MessageJson()
         _Result.Accion="TIME"
-        _Result.TimeBloq = str(TimeBloq())
-
         AddTimeConectionIndependency(15)
 
+        _Result.TimeBloq = str(TimeBloq())
         _Result.Status = 'OK'
         _Result.Mensaje = SussesProcess.ADD_TIME
 
@@ -1455,9 +1454,9 @@ def SetTimePay(client: BlockingAMQPClient, props: pika.spec.BasicProperties, mes
         print('Time Extra: Info 15 segundos')
         _Result = MessageJson()
         _Result.Accion = "TIME"
-        _Result.TimeBloq = str(TimeBloq())
 
         AddTimeConectionIndependency(45)
+        _Result.TimeBloq = str(TimeBloq())
 
         _Result.Status = 'OK'
         _Result.Mensaje = SussesProcess.ADD_TIME
