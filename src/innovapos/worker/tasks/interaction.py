@@ -1395,7 +1395,73 @@ def get_ccm_dispacher(client: BlockingAMQPClient, props: pika.spec.BasicProperti
                 worker.isFinish=False
                 print(f'Estado Maquina: {worker.current_state}')
 
+#TODO: Tiempo extra de conexion
+@worker.app_message_handler("cmm.Info",[WorkerStates.APP])
+@worker.ws_message_handler("ccm.Info",[WorkerStates.ANY])
+def SetTimeInfo(client: BlockingAMQPClient, props: pika.spec.BasicProperties, message: str) -> None:
+    try:
+        print('Time Extra: Info 15 segundos')
+        _Result = MessageJson()
+        _Result.Accion="TIME"
+        _Result.TimeBloq = str(TimeBloq())
 
+        AddTimeConectionWorker(15)
+
+        _Result.Status = 'OK'
+        _Result.Mensaje = SussesProcess.ADD_TIME
+
+        _props = pika.spec.BasicProperties()
+        _props.expiration = '30000'
+        msg = worker.messageJsonOutput(_Result)
+
+        print(f'Mensaje : {msg}')
+        client.send_message(f'{msg}')
+
+    except Exception as ex:
+        print('Error..... dispacher ')
+        print(ex)
+        _Result.Status = "KO"
+        _Result.Success = 'false'
+        _Result.Mensaje = ErrorProcess.DESCONOCIDO
+        msg = worker.messageJsonOutput(_Result)
+        print(f'Mensaje : {msg}')
+        client.send_message(f'{msg}')
+    finally:
+        pass
+
+
+@worker.app_message_handler("cmm.Pay", [WorkerStates.APP])
+@worker.ws_message_handler("ccm.Pay", [WorkerStates.ANY])
+def SetTimePay(client: BlockingAMQPClient, props: pika.spec.BasicProperties, message: str) -> None:
+    try:
+        print('Time Extra: Info 15 segundos')
+        _Result = MessageJson()
+        _Result.Accion = "TIME"
+        _Result.TimeBloq = str(TimeBloq())
+
+        AddTimeConectionWorker(45)
+
+        _Result.Status = 'OK'
+        _Result.Mensaje = SussesProcess.ADD_TIME
+
+        _props = pika.spec.BasicProperties()
+        _props.expiration = '30000'
+        msg = worker.messageJsonOutput(_Result)
+
+        print(f'Mensaje : {msg}')
+        client.send_message(f'{msg}')
+
+    except Exception as ex:
+        print('Error..... dispacher ')
+        print(ex)
+        _Result.Status = "KO"
+        _Result.Success = 'false'
+        _Result.Mensaje = ErrorProcess.DESCONOCIDO
+        msg = worker.messageJsonOutput(_Result)
+        print(f'Mensaje : {msg}')
+        client.send_message(f'{msg}')
+    finally:
+        pass
 #region
 #==============================================================================
 #==============================================================================
