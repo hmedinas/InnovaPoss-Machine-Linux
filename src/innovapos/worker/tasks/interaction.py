@@ -145,6 +145,24 @@ def AddTimeConectionWorker(time_new: int):
         print(f'****************************************')
         worker.Fecha = _FechaResult
 
+def AddTimeConectionIndependency(time_new: int):
+    # si sobra mas de 1 minuto no se suma nada
+    h1 = worker.Fecha
+    h2 = FechaActual()
+    hhmmss = h1 - h2
+    Segundos = hhmmss.seconds
+
+    worker.KeyTime = worker.KeyTime + time_new
+    _FechaActual = worker.Fecha
+    _FechaNueva = datetime.timedelta(seconds=time_new)
+    _FechaResult = _FechaActual + _FechaNueva
+    print(f'***************************************')
+    print(f'Fecha Actual: {FechaActual()}')
+    print(f'Fecha Bloq: {worker.Fecha}')
+    print(f'Nueva Fe. Bloq: {_FechaResult}')
+    print(f'****************************************')
+    worker.Fecha = _FechaResult
+
 def MessageJsonStock(Carril: str = None):
     _CarrilesFormat: str = '''{
             "11":2,
@@ -1405,7 +1423,7 @@ def SetTimeInfo(client: BlockingAMQPClient, props: pika.spec.BasicProperties, me
         _Result.Accion="TIME"
         _Result.TimeBloq = str(TimeBloq())
 
-        AddTimeConectionWorker(15)
+        AddTimeConectionIndependency(15)
 
         _Result.Status = 'OK'
         _Result.Mensaje = SussesProcess.ADD_TIME
@@ -1439,7 +1457,7 @@ def SetTimePay(client: BlockingAMQPClient, props: pika.spec.BasicProperties, mes
         _Result.Accion = "TIME"
         _Result.TimeBloq = str(TimeBloq())
 
-        AddTimeConectionWorker(45)
+        AddTimeConectionIndependency(45)
 
         _Result.Status = 'OK'
         _Result.Mensaje = SussesProcess.ADD_TIME
