@@ -1,5 +1,7 @@
 import pika
+
 import sys
+
 import json
 
 from innovapos.worker.app_worker import worker
