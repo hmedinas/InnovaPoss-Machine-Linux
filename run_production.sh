@@ -1,4 +1,5 @@
-sleep 50;
+sleep 30;
+cd  /home/pi/InnovaPoss-Machine-Linux/
 git pull
 killall python3
 cd  /home/pi/InnovaPoss-Machine-Linux/
