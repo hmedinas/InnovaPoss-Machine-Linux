@@ -313,7 +313,7 @@ def StartProyect(client: BlockingAMQPClient, props: pika.spec.BasicProperties, m
         # TODO: Consultando el Stock
         print('solicitando Stock full')
         _CarrilesFormat: str = str(GetStockStar())
-
+        worker.isFinish = False
         # Creamos el cliente dinamico
         worker.cur_app_user_client = BlockingAMQPClient(
         incoming_mq_params=pika.URLParameters(worker.settings.rabbitmq_app_gate_connection_string),
