@@ -1019,6 +1019,7 @@ Queue2 :{worker.new_out_queue}
 
 
 
+
         # instantiate new cur_app_user_client
         worker.cur_app_user_client = BlockingAMQPClient(
             incoming_mq_params=pika.URLParameters(worker.settings.rabbitmq_app_gate_connection_string),
@@ -1058,6 +1059,7 @@ Queue2 :{worker.new_out_queue}
         _Result.TimeBloq = str(TimeBloq())
         msg= worker.messageJsonOutput(_Result,None)
         client.send_message(f'{msg}',_props)
+        worker.isFinish = False
         print(f'Fecha server msg :{FechaActual()}')
 
 

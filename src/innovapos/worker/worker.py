@@ -466,6 +466,8 @@ class HardwareWorker:
             print('Producto retirado OK')
             print('Valida CCM_Producto_OUT Y WAIT_PRODUCT_OUT_LOCAL')
             print(f'Estado Machine:{self.current_state}')
+            print(f'isFinish:{self.isFinish}')
+
             if(self.current_state==WorkerStates.WAIT_PRODUCT_OUT):
                 if (self.isFinish==True):
                     self.current_state==WorkerStates.IDLE
