@@ -218,7 +218,7 @@ def MessageJsonDispacherEmpresa(_Carril: str = None, _User: str = None, _Camp: s
                 '","User":"' + _User +\
                 '","Camp":"' + _Camp +\
                 '" ,"Carril":"' + _Carril.replace(',','') +\
-                ',"Empresa":"'+_Empresa+'"'+ '"}'
+                '","Empresa":"'+_Empresa+'"}'
     return Comando
 
 def ConexionTimeBloq():
