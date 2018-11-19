@@ -210,6 +210,16 @@ def MessageJsonDispacher(_Carril: str = None, _User: str = None, _Camp: str = No
         '%d/%m/%Y') + '","User":"' + _User + '","Camp":"' + _Camp + '" ,"Carril":"' + _Carril.replace(',',
                                                                                                       '') + '"}'
     return Comando
+def MessageJsonDispacherEmpresa(_Carril: str = None, _User: str = None, _Camp: str = None,_Empresa:str=None):
+    _CarrilesFormat: str = None
+    _Machine: str = worker.machine_id
+    Comando = '{"Accion":"DISPACHER","Machine":"' + _Machine + \
+                '","Fecha":"' + FechaActual().strftime('%d/%m/%Y') +\
+                '","User":"' + _User +\
+                '","Camp":"' + _Camp +\
+                '" ,"Carril":"' + _Carril.replace(',','') +\
+                ',"Empresa":"'+_Empresa+'"'+ '"}'
+    return Comando
 
 def ConexionTimeBloq():
     Fecha = worker.Fecha
@@ -494,6 +504,12 @@ def DispacherProduct(client: BlockingAMQPClient, props: pika.spec.BasicPropertie
         else:
             _Promo = False
 
+        _IdEmpresa=''
+        try:
+            _IdEmpresa=str(params['Empresa'])
+        except Exception as ex:
+            _IdEmpresa = ''
+
         worker.precioProducto = _price
         print('===================================')
         print('DISPACHER')
@@ -531,7 +547,13 @@ def DispacherProduct(client: BlockingAMQPClient, props: pika.spec.BasicPropertie
                         _Result.Status='OK'
                         _Result.Mensaje=SussesProcess.CCM_WRITE
                         #TODO: enviamos la compra al servidor
-                        msgNew = MessageJsonDispacher(_carril, _User=_IdUser, _Camp=_IdCamp)
+                        '''
+                        if(_IdEmpresa==''):
+                            msgNew = MessageJsonDispacher(_carril, _User=_IdUser, _Camp=_IdCamp)
+                        else:
+                        '''
+                        msgNew=MessageJsonDispacherEmpresa(_carril, _User=_IdUser, _Camp=_IdCamp,_Empresa=_IdEmpresa)
+
                         print(f'Message al Server: {msgNew}')
                         oQueueDestroid.newMessageServer(msgNew, props=None, queue_name=NameQueueServer())
                         time.sleep(0.5)
@@ -1313,6 +1335,12 @@ def get_ccm_dispacher(client: BlockingAMQPClient, props: pika.spec.BasicProperti
         _IdUser:str=str(params['User'])
         _IdCamp:str=str(params['Camp'])
 
+        _IdEmpresa = ''
+        try:
+            _IdEmpresa = str(params['Empresa'])
+        except Exception as ex:
+            _IdEmpresa = ''
+
 
         _Result.Status='OK'
         _Result.Phone=''
@@ -1347,7 +1375,8 @@ def get_ccm_dispacher(client: BlockingAMQPClient, props: pika.spec.BasicProperti
                         print('===================================')
                         _Result.Mensaje=SussesProcess.CCM_WRITE
                         #Todo: envio de cambio de Stock al servidor
-                        msgNew=MessageJsonDispacher(_carril,_User=_IdUser,_Camp=_IdCamp)
+                        #msgNew=MessageJsonDispacher(_carril,_User=_IdUser,_Camp=_IdCamp)
+                        msgNew=MessageJsonDispacherEmpresa(_carril,_User=_IdUser,_Camp=_IdCamp,_Empresa=_IdEmpresa)
                         print(f'{msgNew}')
                         oQueueDestroid.newMessageServer(msgNew,props=None,queue_name=NameQueueServer())
                         time.sleep(0.5)
@@ -1529,10 +1558,14 @@ def CarritoCompras(client:BlockingAMQPClient,props: pika.spec.BasicProperties, m
     try:
         params: dict = json.loads(message)
 
-        #_IdUser: str = str(params['User'])
-        #_IdCamp: str = str(params['Camp'])
-        _IdUser='null'
-        _IdCamp='null'
+        _IdUser: str = str(params['User'])
+        _IdCamp: str = str(params['Camp'])
+        _IdEmpresa = ''
+        try:
+            _IdEmpresa = str(params['Empresa'])
+        except Exception as ex:
+            _IdEmpresa = ''
+
 
         lstCarriles=params['CARRILES']
 
@@ -1552,7 +1585,7 @@ def CarritoCompras(client:BlockingAMQPClient,props: pika.spec.BasicProperties, m
 
                     _Result.Mensaje = SussesProcess.CCM_WRITE
                     # Todo: envio de cambio de Stock al servidor
-                    msgNew = MessageJsonDispacher(list, _User=_IdUser, _Camp=_IdCamp)
+                    msgNew = MessageJsonDispacherEmpresa(list, _User=_IdUser, _Camp=_IdCamp,_Empresa=_IdEmpresa)
                     print(f'{msgNew}')
                     oQueueDestroid.newMessageServer(msgNew, props=None, queue_name=NameQueueServer())
 
