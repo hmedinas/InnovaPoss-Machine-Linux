@@ -217,7 +217,7 @@ def MessageJsonDispacherEmpresa(_Carril: str = None, _User: str = None, _Camp: s
                 '","Fecha":"' + FechaActual().strftime('%d/%m/%Y') +\
                 '","User":"' + _User +\
                 '","Camp":"' + _Camp +\
-                '" ,"Carril":"' + _Carril.replace(',','') +\
+                '","Carril":"' + _Carril.replace(',','') +\
                 '","Empresa":"'+_Empresa+'"}'
     return Comando
 
@@ -509,6 +509,8 @@ def DispacherProduct(client: BlockingAMQPClient, props: pika.spec.BasicPropertie
             _IdEmpresa=str(params['Empresa'])
         except Exception as ex:
             _IdEmpresa = ''
+
+
 
         worker.precioProducto = _price
         print('===================================')
@@ -1342,6 +1344,7 @@ def get_ccm_dispacher(client: BlockingAMQPClient, props: pika.spec.BasicProperti
             _IdEmpresa = ''
 
 
+
         _Result.Status='OK'
         _Result.Phone=''
         worker.precioProducto =_price
@@ -1565,6 +1568,15 @@ def CarritoCompras(client:BlockingAMQPClient,props: pika.spec.BasicProperties, m
             _IdEmpresa = str(params['Empresa'])
         except Exception as ex:
             _IdEmpresa = ''
+
+        if(_IdUser is None):
+            _IdUser="null"
+        if (_IdCamp is None):
+            _IdCamp = "null"
+        if(_IdEmpresa is None):
+            _IdEmpresa="null"
+
+
 
 
         lstCarriles=params['CARRILES']
