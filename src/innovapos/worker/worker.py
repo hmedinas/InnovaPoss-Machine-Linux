@@ -543,6 +543,7 @@ class HardwareWorker:
         """
         self.logger.info("Starting up dispenser main loop")
         self.logger.info(f"Following command handlers were registered:\n {', '.join(self._ws_handlers_.keys())}")
+        TimeReboot=0
         while True:
             try:
                 self.logger.info(f"Ejecutando Autorecover.Inicio el worker de conexiones")
@@ -578,7 +579,16 @@ class HardwareWorker:
                         self.cur_app_user_client.process_data_events()
                     sleep(0.1)
             except Exception as e:
+                TimeReboot = TimeReboot + 1
+                # TODO: LINUX
+                print(f'HMS Reboot: {TimeReboot}')
+                if (TimeReboot == 3):
+                    os.system('sudo reboot now')
+
+
                 self.logger.exception(f"An error has occurred during worker execution.")
                 self.logger.info("Recovering from error. Restarting in " +
                                  f"{self.settings.restart_on_fail_seconds} seconds...")
                 sleep(self.settings.restart_on_fail_seconds)
+
+
